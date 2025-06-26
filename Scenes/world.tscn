@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://xjvrvgexqkyr"]
+
+[ext_resource type="Script" uid="uid://dskcrpc2toaw8" path="res://Scenes/ballcamera.gd" id="1_go701"]
+[ext_resource type="PackedScene" uid="uid://dlpfu2tr5bwqi" path="res://Scenes/ballplayer.tscn" id="2_go701"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_yp4wr"]
+sky_top_color = Color(0.2936613, 0.40587452, 0.83822185, 1)
+sky_horizon_color = Color(0.6918986, 0.65137565, 0.56143665, 1)
+
+[sub_resource type="Sky" id="Sky_a02cp"]
+sky_material = SubResource("ProceduralSkyMaterial_yp4wr")
+
+[sub_resource type="Environment" id="Environment_go701"]
+background_mode = 2
+sky = SubResource("Sky_a02cp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5a7ea"]
+albedo_color = Color(1, 0.5411765, 0.4862745, 1)
+metallic = 0.4
+roughness = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_8j60k"]
+material = SubResource("StandardMaterial3D_5a7ea")
+size = Vector3(22, 4, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yp4wr"]
+size = Vector3(22, 4, 1)
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_go701")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.7933533, -0.58801836, 0.15755908, 0, 0.25881907, 0.96592593, -0.6087614, -0.76632047, 0.205335, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("Target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 30)
+fov = 90.0
+near = 0.06
+script = ExtResource("1_go701")
+Target = NodePath("../Ball")
+followdistance = 10.0
+
+[node name="Ball" parent="." instance=ExtResource("2_go701")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7011604, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("BoxMesh_8j60k")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_yp4wr")
